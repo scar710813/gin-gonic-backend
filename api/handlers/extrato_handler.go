@@ -15,7 +15,7 @@ func HandleExtrato(c *gin.Context) {
     clienteID := c.Param("id")
 
     // Execute operações no banco de dados PostgreSQL
-    rows, err := db.Query("SELECT * FROM transacoes WHERE cliente_id = $1 ORDER BY realizada_em DESC LIMIT 10", clienteID)
+    rows, err := db.Query("SELECT * FROM transacoes WHERE id_cliente = $1 ORDER BY realizada_em DESC LIMIT 10", clienteID)
     if err != nil {
         c.JSON(500, gin.H{"error": "Erro ao consultar transações no banco de dados"})
         return

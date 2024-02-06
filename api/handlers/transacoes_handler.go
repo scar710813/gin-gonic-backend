@@ -21,7 +21,7 @@ func HandleTransacoes(c *gin.Context) {
     }
 
     // Execute operações no banco de dados PostgreSQL
-    _, err := db.Exec("INSERT INTO transacoes (cliente_id, valor, tipo, descricao, realizada_em) VALUES ($1, $2, $3, $4, NOW())", clienteID, requestBody.Valor, requestBody.Tipo, requestBody.Descricao)
+    _, err := db.Exec("INSERT INTO transacoes (id_cliente, valor, tipo, descricao, realizada_em) VALUES ($1, $2, $3, $4, NOW())", clienteID, requestBody.Valor, requestBody.Tipo, requestBody.Descricao)
     if err != nil {
         c.JSON(500, gin.H{"error": "Erro ao inserir transação no banco de dados"})
         return
