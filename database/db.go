@@ -9,7 +9,7 @@ var DB *sql.DB
 
 func InitDB() error {
     var err error
-    DB, err = sql.Open("sqlite3", "/root/src/github.com/whyakari/rinha-de-backend-v2/rinha.db")
+    DB, err = sql.Open("sqlite3", "rinha.db")
     if err != nil {
         return err
     }
