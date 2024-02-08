@@ -11,8 +11,22 @@ import (
 
 var limiteDoCliente = 100000
 
+func clienteExists(clienteID string) bool {
+    var exists bool
+    err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM clientes WHERE id = $1)", clienteID).Scan(&exists)
+    if err != nil {
+        return false
+    }
+    return exists
+}
+
 func HandleExtrato(c *gin.Context) {
     clienteID := c.Param("id")
+
+    if !clienteExists(clienteID) {
+        c.JSON(404, gin.H{"error": "Client not found!"})
+        return
+    }
 
     rows, err := db.DB.Query("SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE id_cliente = $1 ORDER BY realizada_em DESC LIMIT 10", clienteID)
     if err != nil {
@@ -59,4 +73,3 @@ func HandleExtrato(c *gin.Context) {
         "ultimas_transacoes": ultimasTransacoes,
     })
 }
-
