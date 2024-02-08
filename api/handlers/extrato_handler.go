@@ -23,8 +23,8 @@ func clienteExists(clienteID string) bool {
 func HandleExtrato(c *gin.Context) {
     clienteID := c.Param("id")
 
-    if !clienteExists(clienteID) {
-        c.JSON(404, gin.H{"error": "Client not found!"})
+	if !clienteExists(clienteID) {
+        c.AbortWithStatus(404) // Retornar 404 se o cliente não existir
         return
     }
 
