@@ -16,5 +16,5 @@
 --------
 
 ### Contatos
-- Telegram: [@whyakari](t.me/whyakari)
+- Telegram: [@whyakari](https://t.me/whyakari)
 - E-mail: akariondev@gmail.com
