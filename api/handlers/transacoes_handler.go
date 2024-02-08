@@ -47,11 +47,10 @@ func HandleTransacoes(c *gin.Context) {
             return
         }
 
-        if saldoAtual-requestBody.Valor < -limiteDoCliente {
-            // Retornar erro 422 - Saldo inconsistente
-            c.JSON(422, gin.H{"error": "Saldo inconsistente após a transação"})
-            return
-        }
+		if requestBody.Tipo == "d" && saldoAtual-requestBody.Valor < -limiteDoCliente {
+			c.JSON(422, gin.H{"error": "Transação de débito não permitida. Saldo insuficiente."})
+			return
+		}
 
         // Se for consistente, atualizar o saldo do cliente
         _, err = db.DB.Exec("UPDATE clientes SET saldo = saldo - $1 WHERE id = $2", requestBody.Valor, clienteID)
