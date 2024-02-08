@@ -1,56 +1,53 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"os"
+	"io/ioutil"
+	"log"
+	"strings"
+
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/whyakari/rinha-de-backend-v2/api/handlers"
+	db "github.com/whyakari/rinha-de-backend-v2/database"
 )
 
-var db *sql.DB
-
 func main() {
-    // Configurar a conexão com o PostgreSQL
-	connectionString := "postgresql://admin:123@rinha/todos?sslmode=disable"
-
-    var err error
-    db, err = sql.Open("postgres", connectionString)
-    if err != nil {
-        fmt.Println("Erro ao conectar ao PostgreSQL:", err)
-        return
-    }
-    defer db.Close()
-
-    // Inicializar o esquema do banco de dados
-    if err := initializeDatabaseSchema(); err != nil {
-        fmt.Println("Erro ao inicializar o esquema do banco de dados:", err)
-        return
+    if err := db.InitDB(); err != nil {
+        log.Fatal("Erro ao inicializar o banco de dados:", err)
     }
 
-    // Resto do seu código para iniciar o servidor...
+	if err := executeSchemaSQL("database/schema.sql"); err != nil {
+		log.Fatal("Erro ao executar o arquivo schema.sql:", err)
+	}
+
 	router := gin.Default()
-
-	// Rota para transações
 	router.POST("/clientes/:id/transacoes", handlers.HandleTransacoes)
-
-	// Rota para extrato
 	router.GET("/clientes/:id/extrato", handlers.HandleExtrato)
 
-	// Inicializar o servidor na porta 8080
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal("Erro ao iniciar o servidor Gin:", err)
+	}
 }
 
-func initializeDatabaseSchema() error {
-    // Ler o conteúdo do arquivo schema.sql
-    content, err := os.ReadFile("database/schema.sql")
-    if err != nil {
-        return err
-    }
+func executeSchemaSQL(filePath string) error {
+	schemaSQL, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
 
-    // Executar o conteúdo do arquivo SQL para criar as tabelas
-    _, err = db.Exec(string(content))
-    return err
+	statements := strings.Split(string(schemaSQL), ";")
+
+	for _, statement := range statements {
+		trimmedStatement := strings.TrimSpace(statement)
+		if trimmedStatement == "" {
+			continue
+		}
+
+		_, err := db.DB.Exec(trimmedStatement)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
-
