@@ -2,10 +2,14 @@ services:
     api01: &api
         hostname: api01
         image: whyakari/rinha:2.0
+        volumes:
+            - .:/app
         environment:
             - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
         ports:
             - "3001:3000"
+        depends_on:
+            - mariadb
         deploy:
             resources:
                 limits:
@@ -35,6 +39,7 @@ services:
 
     mariadb:
         image: mariadb:latest
+        hostname: mariadb
         environment:
             - MYSQL_ROOT_PASSWORD=love
             - MYSQL_DATABASE=rinha
