@@ -5,7 +5,7 @@ services:
         volumes:
             - .:/app
         environment:
-            - DATABASE_URL=sqlite:///app/rinha.db
+            - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
         ports:
             - "3001:3000"
         deploy:
@@ -35,17 +35,23 @@ services:
                     cpus: "0.1"
                     memory: "30MB"
 
-    sqlite:
-        image: library/sqlite:latest
-        volumes:
-            - ./data:/app/data
-        deploy:
-            resources:
+    mariadb:
+          image: mariadb:latest
+          environment:
+              - MYSQL_ROOT_PASSWORD=love
+              - MYSQL_DATABASE=rinha
+              - MYSQL_USER=root
+              - MYSQL_PASSWORD=love
+          volumes:
+              - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+          deploy:
+             resources:
                 limits:
-                    cpus: "0.3"
-                    memory: "120MB"
+                   cpus: "0.3"
+                   memory: "120MB"
 
 networks:
     default:
         driver: bridge
         name: rinha-nginx-2024q1
+
