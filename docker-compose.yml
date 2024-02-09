@@ -1,7 +1,7 @@
 services:
     api01: &api
         hostname: api01
-        image: whyakari/rinha:latest
+        image: whyakari/rinha:2.0
         volumes:
             - .:/app
         environment:
