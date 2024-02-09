@@ -2,8 +2,6 @@ services:
     api01: &api
         hostname: api01
         image: whyakari/rinha:2.0
-        volumes:
-            - .:/app
         environment:
             - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
         ports:
