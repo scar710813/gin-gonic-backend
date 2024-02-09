@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/whyakari/rinha-de-backend-v2/api/handlers"
@@ -30,24 +30,24 @@ func main() {
 }
 
 func executeSchemaSQL(filePath string) error {
-	schemaSQL, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
+    schemaSQL, err := ioutil.ReadFile(filePath)
+    if err != nil {
+        return fmt.Errorf("erro ao ler o arquivo SQL: %v", err)
+    }
 
-	statements := strings.Split(string(schemaSQL), ";")
+    statements := strings.Split(string(schemaSQL), ";")
 
-	for _, statement := range statements {
-		trimmedStatement := strings.TrimSpace(statement)
-		if trimmedStatement == "" {
-			continue
-		}
+    for _, statement := range statements {
+        trimmedStatement := strings.TrimSpace(statement)
+        if trimmedStatement == "" {
+            continue
+        }
 
-		_, err := db.DB.Exec(trimmedStatement)
-		if err != nil {
-			return err
-		}
-	}
+        _, err := db.DB.Exec(trimmedStatement)
+        if err != nil {
+            return fmt.Errorf("erro ao executar a instrução SQL: %v", err)
+        }
+    }
 
-	return nil
+    return nil
 }
