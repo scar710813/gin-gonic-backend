@@ -20,4 +20,3 @@ INSERT INTO clientes (saldo, limite) VALUES
     (0, 1000000),
     (0, 10000000),
     (0, 500000);
-
