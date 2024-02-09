@@ -12,23 +12,23 @@ import (
 var limiteDoCliente = 100000
 
 func clienteExists(clienteID string) bool {
-    var exists bool
-    err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM clientes WHERE id = $1)", clienteID).Scan(&exists)
+    var exists int
+    err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM clientes WHERE id = ?)", clienteID).Scan(&exists)
     if err != nil {
         return false
     }
-    return exists
+    return exists == 1
 }
 
 func HandleExtrato(c *gin.Context) {
     clienteID := c.Param("id")
 
-	if !clienteExists(clienteID) {
-        c.AbortWithStatus(404) // Retornar 404 se o cliente não existir
+    if !clienteExists(clienteID) {
+        c.AbortWithStatus(404)
         return
     }
 
-    rows, err := db.DB.Query("SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE id_cliente = $1 ORDER BY realizada_em DESC LIMIT 10", clienteID)
+    rows, err := db.DB.Query("SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE id_cliente = ? ORDER BY realizada_em DESC LIMIT 10", clienteID)
     if err != nil {
         c.JSON(500, gin.H{"error": "Erro ao consultar transações no banco de dados"})
         return
@@ -36,34 +36,29 @@ func HandleExtrato(c *gin.Context) {
     defer rows.Close()
 
     var saldoAtual int
-    err = db.DB.QueryRow("SELECT saldo FROM clientes WHERE id = $1", clienteID).Scan(&saldoAtual)
+    err = db.DB.QueryRow("SELECT saldo FROM clientes WHERE id = ?", clienteID).Scan(&saldoAtual)
     if err != nil {
         c.JSON(500, gin.H{"error": "Erro ao obter saldo do cliente"})
         return
     }
 
     var ultimasTransacoes []models.Transacao
+
     for rows.Next() {
         var transacao models.Transacao
-        err := rows.Scan(
-			&transacao.Valor,
-			&transacao.Tipo,
-			&transacao.Descricao,
-			&transacao.RealizadaEm)
+        err := rows.Scan(&transacao.Valor, &transacao.Tipo, &transacao.Descricao, &transacao.RealizadaEm)
         if err != nil {
             c.JSON(500, gin.H{"error": "Erro ao processar transação"})
-			fmt.Println(err)
+            fmt.Println(err)
             return
         }
         ultimasTransacoes = append(ultimasTransacoes, transacao)
     }
 
-    // Verifica se não há transações para o cliente
     if len(ultimasTransacoes) == 0 {
         ultimasTransacoes = []models.Transacao{}
     }
 
-    // Retorna a resposta conforme especificado
     c.JSON(200, gin.H{
         "saldo": gin.H{
             "total":        saldoAtual,
