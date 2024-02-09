@@ -36,19 +36,19 @@ services:
                     memory: "30MB"
 
     mariadb:
-          image: mariadb:latest
-          environment:
-              - MYSQL_ROOT_PASSWORD=love
-              - MYSQL_DATABASE=rinha
-              - MYSQL_USER=root
-              - MYSQL_PASSWORD=love
-          volumes:
-              - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-          deploy:
-             resources:
+        image: mariadb:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD=love
+            - MYSQL_DATABASE=rinha
+            - MYSQL_USER=root
+            - MYSQL_PASSWORD=love
+        volumes:
+            - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+        deploy:
+            resources:
                 limits:
-                   cpus: "0.3"
-                   memory: "120MB"
+                    cpus: "0.3"
+                    memory: "120MB"
 
 networks:
     default:
