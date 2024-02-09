@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -30,7 +30,7 @@ func main() {
 }
 
 func executeSchemaSQL(filePath string) error {
-    schemaSQL, err := ioutil.ReadFile(filePath)
+    schemaSQL, err := os.ReadFile(filePath)
     if err != nil {
         return fmt.Errorf("erro ao ler o arquivo SQL: %v", err)
     }
