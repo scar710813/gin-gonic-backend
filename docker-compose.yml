@@ -1,5 +1,6 @@
 services:
     api01: &api
+        build: .
         hostname: api01
         image: whyakari/rinha:2.0
         volumes:
