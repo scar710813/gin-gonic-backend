@@ -24,7 +24,7 @@ func main() {
 	router.POST("/clientes/:id/transacoes", handlers.HandleTransacoes)
 	router.GET("/clientes/:id/extrato", handlers.HandleExtrato)
 
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(":3000"); err != nil {
 		log.Fatal("Erro ao iniciar o servidor Gin:", err)
 	}
 }
