@@ -5,12 +5,11 @@ services:
         volumes:
             - .:/rinha_kk
         environment:
-            - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
+            - DATABASE_URL=mysql://root:love@tcp(db:3306)/rinha
         ports:
             - "3001:3000"
         depends_on:
             - db
-        command: sh -c "export DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha"
         deploy:
             resources:
                 limits:
