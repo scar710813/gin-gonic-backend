@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o app
+RUN go build -o rinha_kk
 
 EXPOSE 3000
 
-CMD ["./app"]
+CMD ["./rinha_kk"]

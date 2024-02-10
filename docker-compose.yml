@@ -1,10 +1,25 @@
 services:
+    db:
+     image: mariadb:latest
+     hostname: mariadb
+     environment:
+        - MYSQL_ROOT_PASSWORD=love
+        - MYSQL_DATABASE=rinha
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=love
+     volumes:
+        - ./app/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+     deploy:
+        resources:
+            limits:
+                cpus: "0.3"
+                memory: "120MB"
+
     api01: &api
-        build: .
         hostname: api01
         image: whyakari/rinha:2.0
         volumes:
-            - .:/app
+            - .:/app/rinha_kk
         environment:
             - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
         ports:
@@ -26,7 +41,7 @@ services:
     nginx:
         image: nginx:latest
         volumes:
-            - ./database/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./app/database/nginx.conf:/etc/nginx/nginx.conf:ro
         depends_on:
             - api01
             - api02
@@ -37,22 +52,6 @@ services:
                 limits:
                     cpus: "0.1"
                     memory: "30MB"
-
-    mariadb:
-        image: mariadb:latest
-        hostname: mariadb
-        environment:
-            - MYSQL_ROOT_PASSWORD=love
-            - MYSQL_DATABASE=rinha
-            - MYSQL_USER=root
-            - MYSQL_PASSWORD=love
-        volumes:
-            - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-        deploy:
-            resources:
-                limits:
-                    cpus: "0.3"
-                    memory: "120MB"
 
 networks:
     default:
