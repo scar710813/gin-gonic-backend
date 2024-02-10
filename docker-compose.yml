@@ -3,7 +3,7 @@ services:
         hostname: api01
         image: whyakari/rinha:2.0
         volumes:
-            - .:/app/rinha_kk
+            - .:/rinha_kk
         environment:
             - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
         ports:
@@ -25,7 +25,7 @@ services:
     nginx:
         image: nginx:latest
         volumes:
-            - ./app/database/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./database/nginx.conf:/etc/nginx/nginx.conf:ro
         depends_on:
             - api01
             - api02
@@ -46,7 +46,7 @@ services:
         - MYSQL_USER=root
         - MYSQL_PASSWORD=love
      volumes:
-        - ./app/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+        - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
      deploy:
         resources:
             limits:
