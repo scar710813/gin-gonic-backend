@@ -9,7 +9,7 @@ services:
         ports:
             - "3001:3000"
         depends_on:
-            - mariadb
+            - db
         deploy:
             resources:
                 limits:
@@ -39,7 +39,7 @@ services:
 
     db:
      image: mariadb:latest
-     hostname: mariadb
+     hostname: db
      environment:
         - MYSQL_ROOT_PASSWORD=love
         - MYSQL_DATABASE=rinha
