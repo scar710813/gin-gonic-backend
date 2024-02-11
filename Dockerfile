@@ -1,14 +1,23 @@
-FROM golang:alpine
+FROM golang:1.22.0-alpine3.19 AS build
 
 WORKDIR /app
 
+COPY go.mod .
+
+COPY go.sum .
+
+RUN go mod download
+
 COPY . .
 
-COPY database/nginx.conf /etc/nginx/nginx.conf
-COPY database/schema.sql docker-entrypoint-initdb.d/schema.sql
+RUN go build -o app .
 
-RUN go build -o rinha_kk
+FROM alpine:3.19.1
+
+WORKDIR /root/
+
+COPY --from=build /app/app .
 
 EXPOSE 3000
 
-CMD ["./rinha_kk"]
+CMD ["./app"]
