@@ -9,9 +9,12 @@ services:
             - DB_HOSTNAME=db
             - PORT=3000
             - POOL_MAX=5
-            - POOL_MIN=5 
+            - POOL_MIN=5
         ports:
             - "3001:3000"
+        depends_on:
+            db:
+                condition: service_healthy  # Aguarda até que o serviço do banco de dados esteja saudável
         deploy:
             resources:
                 limits:
@@ -26,6 +29,9 @@ services:
             - PORT=3000
         ports:
             - "3002:3000"
+        depends_on:
+            db:
+                condition: service_healthy  # Aguarda até que o serviço do banco de dados esteja saudável
 
     nginx:
         image: nginx:latest
@@ -60,6 +66,5 @@ services:
 
 networks:
     default:
-        driver: bridge
+        driver: host
         name: rinha-nginx-2024q1
-
