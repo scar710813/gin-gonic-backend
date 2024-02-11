@@ -12,7 +12,7 @@
 - Golang
 ### Frameworks
 - gin-gonic
-- go-sqlite3
+- mariadb
 --------
 
 ### Contatos
