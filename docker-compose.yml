@@ -5,7 +5,7 @@ services:
         hostname: api01
         image: whyakari/rinha:2.0
         environment:
-            - DATABASE_URL=mysql://root:love@tcp(db:3306)/rinha
+            - DATABASE_URL=mysql://root:love@tcp(mariadb:3306)/rinha
             - DB_HOSTNAME=db
             - PORT=3000
             - POOL_MAX=5
