@@ -12,9 +12,6 @@ services:
             - POOL_MIN=5 
         ports:
             - "3001:3000"
-        depends_on:
-            db:
-              condition: service_healthy
         deploy:
             resources:
                 limits:
