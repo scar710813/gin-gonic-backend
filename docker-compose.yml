@@ -15,11 +15,15 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+        expose:
+            - "3000"
         deploy:
             resources:
                 limits:
                     cpus: "0.55"
                     memory: "200MB"
+        networks:
+            - backend
 
     api02:
         <<: *api
@@ -32,11 +36,15 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+        expose:
+            - "3000"
         deploy:
             resources:
                 limits:
                     cpus: "0.55"
                     memory: "200MB"
+        networks:
+            - backend
 
     nginx:
         image: nginx:latest
@@ -52,6 +60,8 @@ services:
                 limits:
                     cpus: "0.1"
                     memory: "30MB"
+        networks:
+            - backend
 
     db:
      image: mariadb:latest
@@ -75,6 +85,6 @@ services:
                 memory: "120MB"
 
 networks:
-    default:
+    backend:
         driver: bridge
         name: rinha-nginx-2024q1
