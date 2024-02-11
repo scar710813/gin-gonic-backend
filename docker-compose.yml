@@ -14,7 +14,7 @@ services:
             - "3001:3000"
         depends_on:
             db:
-                condition: service_healthy  # Aguarda até que o serviço do banco de dados esteja saudável
+                condition: service_healthy
         deploy:
             resources:
                 limits:
@@ -31,7 +31,12 @@ services:
             - "3002:3000"
         depends_on:
             db:
-                condition: service_healthy  # Aguarda até que o serviço do banco de dados esteja saudável
+                condition: service_healthy
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.55"
+                    memory: "200MB"
 
     nginx:
         image: nginx:latest
@@ -58,6 +63,11 @@ services:
         - MYSQL_PASSWORD=love
      volumes:
         - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+     healthcheck:
+        test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -plove"]
+        interval: 10s
+        timeout: 5s
+        retries: 3
      deploy:
         resources:
             limits:
