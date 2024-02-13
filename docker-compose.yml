@@ -22,8 +22,6 @@ services:
                 limits:
                     cpus: "0.55"
                     memory: "200MB"
-        networks:
-            - backend
 
     api02:
         <<: *api
@@ -43,8 +41,6 @@ services:
                 limits:
                     cpus: "0.55"
                     memory: "200MB"
-        networks:
-            - backend
 
     nginx:
         image: nginx:latest
@@ -60,14 +56,11 @@ services:
                 limits:
                     cpus: "0.1"
                     memory: "30MB"
-        networks:
-            - backend
 
     db:
      image: mariadb:latest
      hostname: db
      environment:
-        - MYSQL_ROOT_PASSWORD=love
         - MYSQL_DATABASE=rinha
         - MYSQL_USER=root
         - MYSQL_PASSWORD=love
@@ -85,6 +78,6 @@ services:
                 memory: "120MB"
 
 networks:
-    backend:
+    default:
         driver: bridge
         name: rinha-nginx-2024q1
