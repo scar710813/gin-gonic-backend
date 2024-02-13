@@ -39,6 +39,7 @@ services:
   db:
     image: mariadb:latest
     hostname: db
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=love
       - MYSQL_DATABASE=rinha
@@ -47,13 +48,20 @@ services:
     ports:
       - "3306:3306"
     volumes:
+      - mariadb:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
 
     deploy:
       resources:
