@@ -5,8 +5,8 @@ services:
     image: whyakari/rinha:2.0
     hostname: api01
     build:
-        context: .
-        dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     environment:
       - DB_HOSTNAME=db
     expose:
@@ -42,6 +42,11 @@ services:
           memory: "20MB"
 
   db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
     image: mariadb:latest
     hostname: db
     restart: unless-stopped
@@ -50,8 +55,7 @@ services:
       - MYSQL_DATABASE=rinha
       - MYSQL_USER=root
       - MYSQL_PASSWORD=love
-    ports:
-      - "3306:3306"
+
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
