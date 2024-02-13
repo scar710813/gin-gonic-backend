@@ -13,11 +13,11 @@ import (
 
 func main() {
     if err := db.InitDB(); err != nil {
-        log.Fatal("Erro ao inicializar o banco de dados:", err)
+        log.Fatal("Error initializing the database:", err)
     }
 
-	if err := executeSchemaSQL("database/schema.sql"); err != nil {
-		log.Fatal("Erro ao executar o arquivo schema.sql:", err)
+	if err := executeSchemaSQL("schema.sql"); err != nil {
+		log.Fatal("Error when executing schema.sql file:", err)
 	}
 
 	router := gin.Default()
@@ -25,14 +25,14 @@ func main() {
 	router.GET("/clientes/:id/extrato", handlers.HandleExtrato)
 
 	if err := router.Run(":3000"); err != nil {
-		log.Fatal("Erro ao iniciar o servidor Gin:", err)
+		log.Fatal("Error starting Gin server:", err)
 	}
 }
 
 func executeSchemaSQL(filePath string) error {
     schemaSQL, err := os.ReadFile(filePath)
     if err != nil {
-        return fmt.Errorf("erro ao ler o arquivo SQL: %v", err)
+        return fmt.Errorf("error reading SQL file: %v", err)
     }
 
     statements := strings.Split(string(schemaSQL), ";")
@@ -45,7 +45,7 @@ func executeSchemaSQL(filePath string) error {
 
         _, err := db.DB.Exec(trimmedStatement)
         if err != nil {
-            return fmt.Errorf("erro ao executar a instrução SQL: %v", err)
+            return fmt.Errorf("error executing instruction SQL: %v", err)
         }
     }
 
