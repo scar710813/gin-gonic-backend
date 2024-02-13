@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    image: mariadb:latest
+    image: mysql:latest
     container_name: "db"
     hostname: db
     restart: unless-stopped
