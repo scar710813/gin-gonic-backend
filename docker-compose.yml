@@ -4,10 +4,15 @@ services:
   api01: &api
     image: whyakari/rinha:2.0
     hostname: api01
+    build:
+        context: .
+        dockerfile: Dockerfile
     environment:
       - DB_HOSTNAME=db
     expose:
       - "3030"
+    ports:
+      - 3030:3030
     depends_on:
       db:
         condition: service_healthy
@@ -20,6 +25,8 @@ services:
   api02:
     <<: *api
     hostname: api02
+    expose:
+      - "3030"
 
   nginx:
     image: nginx:latest
@@ -39,7 +46,7 @@ services:
   db:
     image: mariadb:latest
     hostname: db
-    restart: always
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=love
       - MYSQL_DATABASE=rinha
