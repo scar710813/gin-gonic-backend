@@ -23,8 +23,6 @@ services:
   api02:
     <<: *api
     hostname: api02
-    expose:
-      - "3030"
 
   nginx:
     image: nginx:latest
@@ -45,9 +43,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3306:3306"
+
     image: mariadb:latest
+    container_name: "db"
     hostname: db
     restart: unless-stopped
     environment:
@@ -55,7 +53,8 @@ services:
       - MYSQL_DATABASE=rinha
       - MYSQL_USER=root
       - MYSQL_PASSWORD=love
-
+    ports:
+      - "3306:3306"
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
@@ -70,7 +69,6 @@ services:
           "--connect",
           "--innodb_initialized"
         ]
-
     deploy:
       resources:
         limits:
