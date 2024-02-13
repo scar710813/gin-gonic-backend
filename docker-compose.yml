@@ -9,6 +9,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - DB_HOSTNAME=db
+    ports:
+      - "3306:3306"
     expose:
       - "3030"
     depends_on:
