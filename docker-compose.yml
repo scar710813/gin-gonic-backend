@@ -1,17 +1,15 @@
 version: "3.8"
 
 services:
-  api01: &api
+  api01:
     image: whyakari/rinha:2.0
     hostname: api01
-    build:
-      context: .
-      dockerfile: Dockerfile
     environment:
       - DB_HOSTNAME=db
+    expose:
+      - "3030"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     deploy:
       resources:
         limits:
@@ -19,12 +17,19 @@ services:
           memory: "150MB"
 
   api02:
-    <<: *api
+    image: whyakari/rinha:2.0
     hostname: api02
     environment:
       - DB_HOSTNAME=db
-    ports:
-      - "8082:8080"
+    expose:
+      - "3030"
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "150MB"
 
   nginx:
     image: nginx:latest
@@ -42,14 +47,8 @@ services:
           memory: "20MB"
 
   db:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
-    image: mysql:latest
-    container_name: "db"
+    image: mariadb:latest
     hostname: db
-    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=love
       - MYSQL_DATABASE=rinha
@@ -60,17 +59,11 @@ services:
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      interval: 30s
-      timeout: 30s
-      retries: 3
-      test:
-        [
-          "CMD",
-          "healthcheck.sh",
-          "--su-mysql",
-          "--connect",
-          "--innodb_initialized"
-        ]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -plove"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
     deploy:
       resources:
         limits:
