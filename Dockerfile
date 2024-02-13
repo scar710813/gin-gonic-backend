@@ -1,23 +1,13 @@
-FROM golang:1.22.0-alpine3.19 AS build
-
+FROM golang:1.21.3-alpine as builder
+RUN apk add --no-cache gcc musl-dev
 WORKDIR /app
-
-COPY go.mod .
-
-COPY go.sum .
-
+COPY go.mod go.sum ./
 RUN go mod download
-
 COPY . .
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix go -o main
 
-RUN go build -o app .
-
-FROM alpine:3.19.1
-
+FROM alpine:latest
 WORKDIR /root/
-
-COPY --from=build /app/app .
-
-EXPOSE 3000
-
-CMD ["./app"]
+COPY --from=builder /app/main .
+EXPOSE 3001
+CMD ["./main"]
