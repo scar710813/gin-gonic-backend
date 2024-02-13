@@ -47,7 +47,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
       interval: 5s
