@@ -10,6 +10,8 @@ services:
     hostname: api01
     environment:
       - DB_HOSTNAME=db
+    ports:
+      - "3000:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -25,6 +27,8 @@ services:
     hostname: api02
     environment:
       - DB_HOSTNAME=db
+    ports:
+      - "3001:3000"
 
   nginx:
     image: nginx:latest
