@@ -61,11 +61,9 @@ services:
     container_name: db
     hostname: db
     environment:
-      - MARIADB_USER=root
-      - MARIADB_PASSWORD=love
-      - MARIADB_ROOT_PASSWORD=love
-      - MARIADB_DATABASE=rinha
-      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - MYSQL_ROOT_PASSWORD=love 
+      - MYSQL_DATABASE=rinha 
+      - MYSQL_PASSWORD=love
     ports:
       - "3306:3306"
     volumes:
