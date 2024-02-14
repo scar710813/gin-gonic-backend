@@ -58,16 +58,23 @@ services:
 
   db:
     image: mariadb:latest
+    container_name: db
     hostname: db
     environment:
       - MYSQL_ROOT_PASSWORD=love
       - MYSQL_DATABASE=rinha
       - MYSQL_USER=root
       - MYSQL_PASSWORD=love
+      - MARIADB_USER=root
+      - MARIADB_PASSWORD=love
+      - MARIADB_ROOT_PASSWORD=love
+        MARIADB_DATABASE=rinha
     ports:
       - "3306:3306"
     volumes:
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - "./mariadb-data/data:/var/lib/mysql/data/"
+      - "./mariadb-data/logs:/var/lib/mysql/logs/"
+      - "./schema.sql:/docker-entrypoint-initdb.d/schema.sql"
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
       interval: 5s
