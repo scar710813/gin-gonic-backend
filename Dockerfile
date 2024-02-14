@@ -3,7 +3,7 @@ RUN apk add --no-cache gcc musl-dev
 WORKDIR /app
 COPY go.mod go.sum ./
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix go -o main
+RUN go build -o main
 
 FROM alpine:latest
 WORKDIR /root/
