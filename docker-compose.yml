@@ -15,7 +15,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    network_mode: host
+    network_mode: bridge
     deploy:
       resources:
         limits:
@@ -40,7 +40,7 @@ services:
       - api02
     ports:
       - "9999:9999"
-    network_mode: host
+    network_mode: bridge
     deploy:
       resources:
         limits:
