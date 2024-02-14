@@ -65,6 +65,7 @@ services:
       - MARIADB_PASSWORD=love
       - MARIADB_ROOT_PASSWORD=love
       - MARIADB_DATABASE=rinha
+      - MYSQL_INITDB_SKIP_TZINFO=yes
     ports:
       - "3306:3306"
     volumes:
