@@ -10,11 +10,10 @@ services:
     hostname: api01
     environment:
       - DB_HOSTNAME=db
-    expose:
-      - "3030"
     depends_on:
       db:
         condition: service_healthy
+    network_mode: host
     deploy:
       resources:
         limits:
@@ -30,11 +29,10 @@ services:
     hostname: api02
     environment:
       - DB_HOSTNAME=db
-    expose:
-      - "3030"
     depends_on:
       db:
         condition: service_healthy
+    network_mode: host
     deploy:
       resources:
         limits:
@@ -51,6 +49,7 @@ services:
       - api02
     ports:
       - "9999:9999"
+    network_mode: host
     deploy:
       resources:
         limits:
