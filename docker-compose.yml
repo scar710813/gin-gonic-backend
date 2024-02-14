@@ -69,7 +69,7 @@ services:
     volumes:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -plove"]
       interval: 5s
       timeout: 5s
       retries: 20
