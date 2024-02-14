@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  api01:
+  api01: &api
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,23 +21,10 @@ services:
           memory: "150MB"
 
   api02:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: builder
-    image: whyakari/rinha:2.0
+    <<: *api
     hostname: api02
     environment:
       - DB_HOSTNAME=db
-    depends_on:
-      db:
-        condition: service_healthy
-    network_mode: host
-    deploy:
-      resources:
-        limits:
-          cpus: "0.2"
-          memory: "150MB"
 
   nginx:
     image: nginx:latest
