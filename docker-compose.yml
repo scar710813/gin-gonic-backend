@@ -58,6 +58,7 @@ services:
 
   db:
     image: mariadb:latest
+    restart: always
     container_name: db
     hostname: db
     environment:
