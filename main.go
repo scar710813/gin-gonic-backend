@@ -13,7 +13,7 @@ import (
 
 func main() {
     if err := db.InitDB(); err != nil {
-        log.Fatal("Erro ao inicializar o banco de dados:", err)
+        log.Fatal("Error initializing the database:", err)
     }
 
     if err := executeSchemaSQL("schema.sql"); err != nil {
