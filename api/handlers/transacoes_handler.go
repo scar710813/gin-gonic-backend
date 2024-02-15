@@ -2,17 +2,11 @@ package handlers
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/gin-gonic/gin"
 	db "github.com/whyakari/rinha-de-backend-v2/database"
 )
 
 func HandleTransacoes(c *gin.Context) {
-    if err := db.InitDB(); err != nil {
-        log.Fatal("Erro ao inicializar o banco de dados:", err)
-    }
-    
     clienteID := c.Param("id")
 
     var requestBody struct {
