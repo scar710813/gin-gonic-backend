@@ -10,6 +10,10 @@ services:
     hostname: api01
     environment:
       - DB_HOSTNAME=localhost
+      - DB_USER=root
+      - DB_PASSWORD=love
+      - DB_NAME=rinha
+      - DB_PORT=3306
     ports:
       - "3000:3000"
     depends_on:
@@ -27,6 +31,10 @@ services:
     hostname: api02
     environment:
       - DB_HOSTNAME=localhost
+      - DB_USER=root
+      - DB_PASSWORD=love
+      - DB_NAME=rinha
+      - DB_PORT=3306
     ports:
       - "3001:3000"
 
@@ -52,7 +60,6 @@ services:
     container_name: db
     hostname: db
     environment:
-      - DB_HOSTNAME=localhost
       - MYSQL_ROOT_PASSWORD=love 
       - MYSQL_DATABASE=rinha 
       - MYSQL_PASSWORD=love
