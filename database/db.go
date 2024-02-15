@@ -10,12 +10,30 @@ import (
 var DB *sql.DB
 
 func InitDB() error {
+    dbUser := os.Getenv("DB_USER")
+    dbName := os.Getenv("DB_NAME")
+    dbPort := os.Getenv("DB_PORT")
+    dbPassword := os.Getenv("DB_PASSWORD")
     dbHostname := os.Getenv("DB_HOSTNAME")
+
     if dbHostname == "" {
         return fmt.Errorf("DB_HOSTNAME environment variable is not set")
     }
 
-    dbConnString := fmt.Sprintf("root:love@tcp(%s:3306)/rinha", dbHostname)
+    if dbUser == "" {
+        return fmt.Errorf("DB_USER environment variable is not set")
+    }
+
+    if dbName == "" {
+        return fmt.Errorf("DB_NAME environment variable is not set")
+    }
+
+    if dbPort == "" {
+        dbPort = "3306" // port default to MySQL
+    }
+
+    dbConnString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPassword, dbHostname, dbPort, dbName)
+
     var err error
     DB, err = sql.Open("mysql", dbConnString)
     if err != nil {
@@ -29,3 +47,4 @@ func InitDB() error {
 
     return nil
 }
+
