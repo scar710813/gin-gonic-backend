@@ -9,7 +9,7 @@ services:
     image: whyakari/rinha:2.0
     hostname: api01
     environment:
-      - DB_HOSTNAME=db
+      - DB_HOSTNAME=localhost
       - PORT=3000
     ports:
       - "3000:3000"
@@ -27,7 +27,7 @@ services:
     <<: *api
     hostname: api02
     environment:
-      - DB_HOSTNAME=db
+      - DB_HOSTNAME=localhost
     ports:
       - "3001:3000"
 
@@ -53,6 +53,7 @@ services:
     container_name: db
     hostname: db
     environment:
+      - DB_HOSTNAME=localhost
       - MYSQL_ROOT_PASSWORD=love 
       - MYSQL_DATABASE=rinha 
       - MYSQL_PASSWORD=love
