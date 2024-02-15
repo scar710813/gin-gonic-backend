@@ -10,7 +10,7 @@ var DB *sql.DB
 
 func InitDB() error {
     var err error
-    DB, err = sql.Open("mysql", "root:love@tcp(db:3306)/rinha")
+    DB, err = sql.Open("mysql", "root:love@tcp(localhost:3306)/rinha")
     if err != nil {
         return fmt.Errorf("error connecting to database: %v", err)
     }
