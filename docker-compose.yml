@@ -51,7 +51,7 @@ services:
     image: mariadb:latest
     restart: always
     container_name: db
-    hostname: localhost
+    hostname: db
     environment:
       - MYSQL_ROOT_PASSWORD=love 
       - MYSQL_DATABASE=rinha 
