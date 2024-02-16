@@ -9,7 +9,7 @@ services:
     image: whyakari/rinha:2.0
     hostname: api01
     environment:
-      - DB_HOSTNAME=localhost
+      - DB_HOSTNAME=db
       - DB_USER=root
       - DB_PASSWORD=love
       - DB_NAME=rinha
@@ -31,7 +31,7 @@ services:
     <<: *api
     hostname: api02
     environment:
-      - DB_HOSTNAME=localhost
+      - DB_HOSTNAME=db
       - DB_USER=root
       - DB_PASSWORD=love
       - DB_NAME=rinha
