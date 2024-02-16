@@ -6,11 +6,11 @@ usage() {
 }
 
 start_local() {
-    docker-compose -f docker-compose-local.yml up
+    docker compose -f docker-compose-local.yml up
 }
 
 start_prod() {
-    docker-compose up
+    docker compose up
 }
 
 while [[ "$#" -gt 0 ]]; do
