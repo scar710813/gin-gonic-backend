@@ -9,4 +9,4 @@ FROM alpine:latest
 WORKDIR /root/
 COPY --from=builder /app/main .
 EXPOSE 3001
-CMD ["./main"]
+CMD ["./app/main"]
