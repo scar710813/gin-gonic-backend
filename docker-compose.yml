@@ -19,8 +19,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    expose:
-      - "3030"
     deploy:
       resources:
         limits:
