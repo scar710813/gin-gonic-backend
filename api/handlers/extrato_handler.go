@@ -30,7 +30,7 @@ func HandleExtrato(c *gin.Context) {
 
     rows, err := db.DB.Query("SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE id_cliente = ? ORDER BY realizada_em DESC LIMIT 10", clienteID)
     if err != nil {
-        c.JSON(500, gin.H{"error": "Erro ao consultar transações no banco de dados"})
+        c.JSON(500, gin.H{"error": "Error when querying transactions in the database"})
         return
     }
     defer rows.Close()
@@ -38,7 +38,7 @@ func HandleExtrato(c *gin.Context) {
     var saldoAtual int
     err = db.DB.QueryRow("SELECT saldo FROM clientes WHERE id = ?", clienteID).Scan(&saldoAtual)
     if err != nil {
-        c.JSON(500, gin.H{"error": "Erro ao obter saldo do cliente"})
+        c.JSON(500, gin.H{"error": "Error getting customer balance"})
         return
     }
 
@@ -48,7 +48,7 @@ func HandleExtrato(c *gin.Context) {
         var transacao models.Transacao
         err := rows.Scan(&transacao.Valor, &transacao.Tipo, &transacao.Descricao, &transacao.RealizadaEm)
         if err != nil {
-            c.JSON(500, gin.H{"error": "Erro ao processar transação"})
+            c.JSON(500, gin.H{"error": "Error processing transaction"})
             fmt.Println(err)
             return
         }
