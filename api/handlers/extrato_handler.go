@@ -9,15 +9,16 @@ import (
 	"github.com/whyakari/rinha-de-backend-v2/models"
 )
 
-var limiteDoCliente = 100000
+var limiteDoCliente int
 
 func clienteExists(clienteID string) bool {
-    var exists int
+    var exists bool
     err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM clientes WHERE id = ?)", clienteID).Scan(&exists)
     if err != nil {
+        fmt.Println("Error checking if client exists:", err)
         return false
     }
-    return exists == 1
+    return exists
 }
 
 func HandleExtrato(c *gin.Context) {
@@ -28,9 +29,15 @@ func HandleExtrato(c *gin.Context) {
         return
     }
 
+    err := db.DB.QueryRow("SELECT limite FROM clientes WHERE id = ?", clienteID).Scan(&limiteDoCliente)
+    if err != nil {
+        c.JSON(500, gin.H{"error": "Error getting customer limit"})
+        return
+    }
+
     rows, err := db.DB.Query("SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE id_cliente = ? ORDER BY realizada_em DESC LIMIT 10", clienteID)
     if err != nil {
-        c.JSON(500, gin.H{"error": "Erro ao consultar transações no banco de dados"})
+        c.JSON(500, gin.H{"error": "Error when querying transactions in the database"})
         return
     }
     defer rows.Close()
@@ -38,7 +45,7 @@ func HandleExtrato(c *gin.Context) {
     var saldoAtual int
     err = db.DB.QueryRow("SELECT saldo FROM clientes WHERE id = ?", clienteID).Scan(&saldoAtual)
     if err != nil {
-        c.JSON(500, gin.H{"error": "Erro ao obter saldo do cliente"})
+        c.JSON(500, gin.H{"error": "Error getting customer balance"})
         return
     }
 
@@ -48,7 +55,7 @@ func HandleExtrato(c *gin.Context) {
         var transacao models.Transacao
         err := rows.Scan(&transacao.Valor, &transacao.Tipo, &transacao.Descricao, &transacao.RealizadaEm)
         if err != nil {
-            c.JSON(500, gin.H{"error": "Erro ao processar transação"})
+            c.JSON(500, gin.H{"error": "Error processing transaction"})
             fmt.Println(err)
             return
         }
@@ -68,3 +75,4 @@ func HandleExtrato(c *gin.Context) {
         "ultimas_transacoes": ultimasTransacoes,
     })
 }
+
