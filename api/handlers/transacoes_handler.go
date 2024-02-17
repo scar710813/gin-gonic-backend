@@ -16,7 +16,7 @@ func HandleTransacoes(c *gin.Context) {
     }
 
     if err := c.ShouldBindJSON(&requestBody); err != nil {
-        c.JSON(400, gin.H{"error": "Dados inválidos"})
+        c.JSON(400, gin.H{"error": "Invalid data"})
         return
     }
 
