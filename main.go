@@ -6,7 +6,6 @@ import (
     "os"
     "strings"
     "github.com/gin-gonic/gin"
-    _ "github.com/mattn/go-sqlite3"
     "github.com/whyakari/rinha-de-backend-v2/api/handlers"
     db "github.com/whyakari/rinha-de-backend-v2/database"
 )
