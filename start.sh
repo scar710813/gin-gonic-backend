@@ -10,7 +10,7 @@ start_local() {
 }
 
 start_prod() {
-    docker compose up
+    docker compose up -d
 }
 
 while [[ "$#" -gt 0 ]]; do
