@@ -9,15 +9,16 @@ import (
 	"github.com/whyakari/rinha-de-backend-v2/models"
 )
 
-var limiteDoCliente = 100000
+var limiteDoCliente int
 
 func clienteExists(clienteID string) bool {
-    var exists int
+    var exists bool
     err := db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM clientes WHERE id = ?)", clienteID).Scan(&exists)
     if err != nil {
+        fmt.Println("Error checking if client exists:", err)
         return false
     }
-    return exists == 1
+    return exists
 }
 
 func HandleExtrato(c *gin.Context) {
@@ -25,6 +26,12 @@ func HandleExtrato(c *gin.Context) {
 
     if !clienteExists(clienteID) {
         c.AbortWithStatus(404)
+        return
+    }
+
+    err := db.DB.QueryRow("SELECT limite FROM clientes WHERE id = ?", clienteID).Scan(&limiteDoCliente)
+    if err != nil {
+        c.JSON(500, gin.H{"error": "Error getting customer limit"})
         return
     }
 
@@ -68,3 +75,4 @@ func HandleExtrato(c *gin.Context) {
         "ultimas_transacoes": ultimasTransacoes,
     })
 }
+
