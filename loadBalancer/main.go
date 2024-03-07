@@ -26,32 +26,34 @@ type ProxyHandler struct {
 }
 
 func (ph *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	targetAddr := ph.loadBalancer.NextServer()
-	targetURL := &url.URL{
-		Scheme: "http",
-		Host:   targetAddr,
-		Path:   r.URL.Path,
-	}
-	r.URL = targetURL
+    targetAddr := ph.loadBalancer.NextServer()
+    targetURL, _ := url.Parse("http://" + targetAddr)
 
-	resp, err := ph.client.Do(r)
-	if err != nil {
-		log.Printf("Error proxying request: %v", err)
-		http.Error(w, "Bad Gateway", http.StatusBadGateway)
-		return
-	}
-	defer resp.Body.Close()
+    newRequest := &http.Request{
+        Method: r.Method,
+        URL:    targetURL.ResolveReference(r.URL),
+        Header: r.Header,
+        Body:   r.Body,
+    }
 
-	for name, values := range resp.Header {
-		w.Header()[name] = values
-	}
-	w.WriteHeader(resp.StatusCode)
+    resp, err := ph.client.Do(newRequest)
+    if err != nil {
+        log.Printf("Error proxying request: %v", err)
+        http.Error(w, "Bad Gateway", http.StatusBadGateway)
+        return
+    }
+    defer resp.Body.Close()
 
-	io.Copy(w, resp.Body)
+    for name, values := range resp.Header {
+        w.Header()[name] = values
+    }
+    w.WriteHeader(resp.StatusCode)
+
+    io.Copy(w, resp.Body)
 }
 
 func handleHTTPServer() {
-	addrs := []string{"api01:3000", "api02:3000"}
+	addrs := []string{"localhost:3000", "localhost:3000"}
 	roundRobin := &RoundRobin{addrs: addrs}
 	client := &http.Client{}
 
@@ -101,6 +103,6 @@ func handleTCPConnection() {
 }
 
 func main() {
-	go handleHTTPServer()
+	handleHTTPServer()
 	// handleTCPConnection()
 }
