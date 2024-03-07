@@ -14,4 +14,6 @@ WORKDIR /app
 
 COPY --from=builder /app/shinsei .
 
+EXPOSE 9999
+
 CMD ["./shinsei"]
