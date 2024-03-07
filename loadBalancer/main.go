@@ -11,7 +11,7 @@ import (
 )
 
 var (
-    maxConnections = 800
+    maxConnections = 200
     sem            = make(chan struct{}, maxConnections)
 )
 
