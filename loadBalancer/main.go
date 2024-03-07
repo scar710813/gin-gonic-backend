@@ -81,7 +81,7 @@ func main() {
 
 	http.Handle("/", &ProxyHandler{loadBalancer: roundRobin, client: client})
 
-	port := ":9999"
+	port := ":9998"
 	fmt.Println("Proxy server listening on port", port)
 
 	tcpListener, err := net.Listen("tcp", port)
