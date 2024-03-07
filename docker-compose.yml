@@ -14,7 +14,7 @@ services:
       - DB_NAME=rinha
       - DB_PORT=3306
     ports:
-      - "3001:3001"
+      - "3001:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -34,7 +34,7 @@ services:
       - DB_NAME=rinha
       - DB_PORT=3306
     ports:
-      - "3002:3002"
+      - "3002:3000"
 
   shinsei:
     build:
@@ -44,6 +44,8 @@ services:
     depends_on:
       - api01
       - api02
+    ports:
+      - "9998:9999"
     deploy:
       resources:
         limits:

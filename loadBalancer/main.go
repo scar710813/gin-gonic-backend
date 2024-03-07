@@ -54,7 +54,7 @@ func (ph *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	addrs := []string{"api01:3001", "api02:3002"}
+	addrs := []string{"api01:3000", "api02:3000"}
 
 	roundRobin := &RoundRobin{addrs: addrs}
 
