@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY loadBalancer /app
 
-RUN go build -o shinsei
+RUN go build -o shinsei main.go
 
 FROM alpine:latest
 
