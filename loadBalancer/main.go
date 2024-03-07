@@ -102,5 +102,5 @@ func handleTCPConnection() {
 
 func main() {
 	go handleHTTPServer()
-	handleTCPConnection()
+	// handleTCPConnection()
 }
