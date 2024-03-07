@@ -6,12 +6,14 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o main
+RUN go build -o main main.go
 
 FROM alpine:latest
 
-COPY --from=builder /app/main /app/main
+WORKDIR /app
+
+COPY --from=builder /app/main .
 
 EXPOSE 3000
 
-CMD ["/app/main"]
+CMD ["./main"]
