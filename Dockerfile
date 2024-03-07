@@ -13,6 +13,8 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY --from=builder /app/healthcheck.sh .
+COPY --from=builder /app/schema.sql .
 
 EXPOSE 3000
 
