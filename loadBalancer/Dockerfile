@@ -4,17 +4,16 @@ RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
-COPY loadBalancer /app
+COPY . .
 
 RUN go build -o shinsei main.go
 
 FROM alpine:latest
 
-COPY --from=builder /app/shinsei /app/shinsei
-
 WORKDIR /app
+
+COPY --from=builder /app/shinsei .
 
 EXPOSE 9999
 
 CMD ["./shinsei"]
-
