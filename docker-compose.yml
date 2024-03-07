@@ -2,10 +2,10 @@ version: "3.8"
 
 services:
   api01: &api
-    build:
-       context: .
-       dockerfile: Dockerfile
-    # image: whyakari/rinha:2.0
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    image: whyakari/rinha:2.0
     hostname: api01
     environment:
       - DB_HOSTNAME=db
@@ -37,10 +37,10 @@ services:
       - "3002:3000"
 
   shinsei:
-    build:
-      context: .
-      dockerfile: loadBalancer/Dockerfile
-    # image: whyakari/shinsei:latest
+    #build:
+    #  context: .
+    #  dockerfile: loadBalancer/Dockerfile
+    image: whyakari/shinsei:latest
     depends_on:
       - api01
       - api02
