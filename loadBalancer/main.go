@@ -67,7 +67,7 @@ func handleHTTPServer() {
 }
 
 func handleTCPConnection() {
-	addrs := []string{"localhost:3000", "localhost:3000"}
+	addrs := []string{"api01:3000", "api02:3000"}
 	roundRobin := &RoundRobin{addrs: addrs}
 
 	port := ":9999"
