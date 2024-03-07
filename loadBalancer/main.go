@@ -50,17 +50,43 @@ func (ph *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, resp.Body)
 }
 
-func handleTCPConnection(listener net.Listener, loadBalancer *RoundRobin) {
+func handleHTTPServer() {
+	addrs := []string{"api01:3000", "api02:3000"}
+	roundRobin := &RoundRobin{addrs: addrs}
+	client := &http.Client{}
+
+	http.Handle("/", &ProxyHandler{loadBalancer: roundRobin, client: client})
+
+	port := ":9999"
+	fmt.Println("HTTP Proxy server listening on port", port)
+	if err := http.ListenAndServe(port, nil); err != nil {
+		log.Fatal("Error starting HTTP proxy server:", err)
+	}
+}
+
+func handleTCPConnection() {
+	addrs := []string{"api01:3000", "api02:3000"}
+	roundRobin := &RoundRobin{addrs: addrs}
+
+	port := ":9999"
+	tcpListener, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatal("Error starting TCP proxy server:", err)
+	}
+	defer tcpListener.Close()
+
+	fmt.Println("TCP Proxy server listening on port", port)
+
 	for {
-		downstream, err := listener.Accept()
+		downstream, err := tcpListener.Accept()
 		if err != nil {
-			log.Println("Error accepting connection:", err)
+			log.Println("Error accepting TCP connection:", err)
 			continue
 		}
 		go func(downstream net.Conn) {
 			defer downstream.Close()
 
-			upstreamAddr := loadBalancer.NextServer()
+			upstreamAddr := roundRobin.NextServer()
 			upstream, err := net.Dial("tcp", upstreamAddr)
 			if err != nil {
 				log.Println("Error connecting to upstream:", err)
@@ -75,24 +101,6 @@ func handleTCPConnection(listener net.Listener, loadBalancer *RoundRobin) {
 }
 
 func main() {
-	addrs := []string{"api01:3000", "api02:3000"}
-	roundRobin := &RoundRobin{addrs: addrs}
-	client := &http.Client{}
-
-	http.Handle("/", &ProxyHandler{loadBalancer: roundRobin, client: client})
-
-	port := ":9998"
-	fmt.Println("Proxy server listening on port", port)
-
-	tcpListener, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatal("Error starting TCP proxy server:", err)
-	}
-	defer tcpListener.Close()
-
-	go handleTCPConnection(tcpListener, roundRobin)
-
-	if err := http.ListenAndServe(port, nil); err != nil {
-		log.Fatal("Error starting proxy server:", err)
-	}
+	go handleHTTPServer()
+	handleTCPConnection()
 }
