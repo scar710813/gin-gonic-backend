@@ -11,7 +11,7 @@ import (
 )
 
 var (
-    maxConnections = 200
+    maxConnections = 2000
     sem            = make(chan struct{}, maxConnections)
 )
 
@@ -113,6 +113,6 @@ func handleTCPConnection() {
 }
 
 func main() {
-    //handleHTTPServer()
-    handleTCPConnection()
+    handleHTTPServer()
+    //handleTCPConnection()
 }
